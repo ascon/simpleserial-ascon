@@ -86,7 +86,7 @@ uint8_t ascon(uint8_t* data, uint8_t dlen) {
   if (flags & M) {
     mlen = *data;
     data += 1;
-    if (SS_SHARED) len = NUM_WORDS(mlen) * sizeof(*m);
+    len = SS_SHARED ? NUM_WORDS(mlen) * sizeof(*m) : mlen;
     if (m) free(m);
     m = malloc(len);
     memcpy(m, data, len);
@@ -96,7 +96,7 @@ uint8_t ascon(uint8_t* data, uint8_t dlen) {
   if (flags & C) {
     clen = *data;
     data += 1;
-    if (SS_SHARED) len = NUM_WORDS(clen) * sizeof(*c);
+    len = SS_SHARED ? NUM_WORDS(clen) * sizeof(*m) : clen;
     if (c) free(c);
     c = malloc(len);
     memcpy(c, data, len);
@@ -106,7 +106,7 @@ uint8_t ascon(uint8_t* data, uint8_t dlen) {
   if (flags & A) {
     alen = *data;
     data += 1;
-    if (SS_SHARED) len = NUM_WORDS(alen) * sizeof(*a);
+    len = SS_SHARED ? NUM_WORDS(alen) * sizeof(*m) : alen;
     if (a) free(a);
     a = malloc(len);
     memcpy(a, data, len);
@@ -115,7 +115,7 @@ uint8_t ascon(uint8_t* data, uint8_t dlen) {
 
   if (flags & N) {
     int nlen = CRYPTO_NPUBBYTES;
-    if (SS_SHARED) len = NUM_WORDS(nlen) * sizeof(*n);
+    len = SS_SHARED ? NUM_WORDS(nlen) * sizeof(*m) : nlen;
     if (n) free(n);
     n = malloc(len);
     memcpy(n, data, len);
@@ -124,7 +124,7 @@ uint8_t ascon(uint8_t* data, uint8_t dlen) {
 
   if (flags & K) {
     int klen = CRYPTO_KEYBYTES;
-    if (SS_SHARED) len = NUM_WORDS(klen) * sizeof(*k);
+    len = SS_SHARED ? NUM_WORDS(klen) * sizeof(*m) : klen;
     if (k) free(k);
     k = malloc(len);
     memcpy(k, data, len);
@@ -133,7 +133,7 @@ uint8_t ascon(uint8_t* data, uint8_t dlen) {
 
   if (flags & RUN_ENC) {
     clen = mlen + CRYPTO_ABYTES;
-    if (SS_SHARED) len = NUM_WORDS(clen) * sizeof(*c);
+    len = SS_SHARED ? NUM_WORDS(clen) * sizeof(*m) : clen;
     if (c) free(c);
     c = malloc(len);
 
@@ -153,7 +153,7 @@ uint8_t ascon(uint8_t* data, uint8_t dlen) {
   if (flags & RUN_DEC) {
     int result;
     mlen = clen - CRYPTO_ABYTES;
-    if (SS_SHARED) len = NUM_WORDS(mlen) * sizeof(*m);
+    len = SS_SHARED ? NUM_WORDS(mlen) * sizeof(*m) : mlen;
     if (m) free(m);
     m = malloc(len);
 
