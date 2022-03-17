@@ -36,8 +36,8 @@ TARGET = simpleserial-ascon
 # Header files (.h) are automatically pulled in.
 SRC += ${TARGET}.c
 SRC += randombytes.c
-SRC+=$(wildcard Implementations/$(CRYPTO_PATH)/*.c)
-EXTRAINCDIRS += Implementations/$(CRYPTO_PATH)
+SRC+=$(wildcard $(CRYPTO_PATH)/*.c)
+EXTRAINCDIRS += $(CRYPTO_PATH)
 
 # -----------------------------------------------------------------------------
 CFLAGS += $(EXTRA_OPTS)
