@@ -14,8 +14,8 @@ A preliminary evaluation of these implementations has been performed on some
 be reproduced by performing the following steps:
 
 - Make sure this repository is checked out in the `hardware/victims/firmware` folder of your chipwhisperer installation.
-- Make sure the `jupyter/*.ipynb` scripts are located in the `jupyter` folder of your chipwhisperer installation.
-- Run the shared simpleserial interface jupyter script `jupyter/ascon_sca_sss.ipynb`.
+- Make sure the `jupyter/ascon_sca.ipynb` script is located in the `jupyter` folder of your chipwhisperer installation.
+- Run the shared simpleserial interface jupyter script `jupyter/ascon_sca.ipynb`.
 
 The masked software interface follows the
 [Call for Protected Software Implementations](https://cryptography.gmu.edu/athena/LWC/Call_for_Protected_Software_Implementations.pdf)
@@ -102,10 +102,8 @@ given in the jupyter scripts in this repository.
 # Attack/Leakage Assessment Characteristics
 
 - Data inputs and performed operations:
-  * encrypt/decrypt using plain CW simpleserial interface defined in
-    `jupyter/ascon_sca.ipynb`
   * encrypt/decrypt using shared CW simpleserial interface defined in
-    `jupyter/ascon_sca_sss.ipynb`
+    `jupyter/ascon_sca.ipynb`
   * STM32F303 and STM32F415: `ASCON_PA_ROUNDS` and `ASCON_PB_ROUNDS` reduced to
     2 rounds to mostly fit within 24400 samples
 
@@ -151,7 +149,7 @@ given in the jupyter scripts in this repository.
 
 # Documentation of Results
 
-Attack script using shared simpleserial interface: `jupyter/ascon_sca_sss.ipynb`
+Attack script using shared simpleserial interface: `jupyter/ascon_sca.ipynb`
 
 Note that for the ChipWhisperer Lite Scope only the first 24400 samples have
 been recorded. To cover larger parts of the implementation, the number of rounds
