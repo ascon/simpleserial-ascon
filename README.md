@@ -162,7 +162,7 @@ clkgen x4.
 
 - Decryption (2 PA/PB rounds) of `protected_bi32_armv6` on STM32F303 using
   3 rotated shares and 8M traces:  
-  ![8M](ttest/protected_bi32_armv6/3shares_ror5/CW308_STM32F303_8000000.png)
+  ![8M](ttest/protected_bi32_armv6/3shares_ror5_dec/CW308_STM32F303_8000000.png)
 
 
 ## 2 rotated shares with device specific fixes
@@ -181,12 +181,12 @@ for other devices.
 - Encryption (12/6 PA/PB rounds) of `protected_bi32_armv6` on STM32F405 using
   2 rotated shares, device specific fixes, external bit interleaving
   (can be computed offline, does not depend on key) and ~4.2M traces:  
-  ![~4.2M](ttest/protected_bi32_armv6/2shares_ror5_extbi/CW308_STM32F405_4194368.png)
+  ![~4.2M](ttest/protected_bi32_armv6/2shares_ror5_enc_mov0_extbi/CW308_STM32F405_4194368.png)
 
 - Decryption (2 PA/PB rounds) of `protected_bi32_armv6` on STM32F415 using
   2 rotated shares with device specific fixes and 4M and 5M traces:  
-  ![4M](ttest/protected_bi32_armv6/2shares_ror5_mov0/CW308_STM32F415_4000000.png)  
-  ![5M](ttest/protected_bi32_armv6/2shares_ror5_mov0/CW308_STM32F415_5000000.png)
+  ![4M](ttest/protected_bi32_armv6/2shares_ror5_dec_mov0/CW308_STM32F415_4000000.png)  
+  ![5M](ttest/protected_bi32_armv6/2shares_ror5_dec_mov0/CW308_STM32F415_5000000.png)
 
 
 ## 2 rotated shares without device specific fixes
@@ -196,11 +196,11 @@ of traces (<10k). In the following we show such example graphs.
 
 - Decryption (2 PA/PB rounds) of `protected_bi32_armv6` on STM32F415 using
   2 rotated shares, without device specific fixes and 100k traces:  
-  ![100k](ttest/protected_bi32_armv6/2shares_ror5/CW308_STM32F415_100000.png)
+  ![100k](ttest/protected_bi32_armv6/2shares_ror5_dec/CW308_STM32F415_100000.png)
 
 - Decryption (2 PA/PB rounds) of `protected_bi32_armv6` on STM32F303 using
   2 rotated shares, without device specific fixes and 10k traces:  
-  ![100k](ttest/protected_bi32_armv6/2shares_ror5/CW308_STM32F303_10000.png)
+  ![100k](ttest/protected_bi32_armv6/2shares_ror5_dec/CW308_STM32F303_10000.png)
 
 
 # Authors
