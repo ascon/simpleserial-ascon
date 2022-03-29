@@ -8,7 +8,9 @@ The masked C implementations require a minimum amount of ASM instructions.
 Otherwise, the compiler may heavily optimize the code and even combine
 shares. Obviously, the output generated is very sensitive to compiler and
 environment changes and any generated output needs to be security evaluated.
-All implementations have been compiled with `-Os`, the ChipWhisperer default.
+The implementations have been compiled with the ChipWhisperer default compiler
+optimization flags which use `-Os` instead of `-O2` (see makefile and jupyter
+script for details).
 
 A preliminary evaluation of these implementations has been performed on some
 [ChipWhisperer](https://www.newae.com/chipwhisperer) devices. The results can
@@ -165,8 +167,12 @@ clkgen x4.
 ## 3 rotated shares
 
 - Decryption (2 PA/PB rounds) of `protected_bi32_armv6` on STM32F303 using
-  3 rotated shares and 8M traces:  
-  ![8M](ttest/protected_bi32_armv6/3shares_ror5_dec/CW308_STM32F303_8000000.png)
+  3 rotated shares, optimization `-Os` and 10M traces:  
+  ![10M](ttest/protected_bi32_armv6/3shares_ror5_dec/CW308_STM32F3_10000000.png)
+
+- Decryption (2 PA/PB rounds) of `protected_bi32_armv6` on STM32F415 using
+  3 rotated shares, optimization `-O2` and 10M traces:  
+  ![10M](ttest/protected_bi32_armv6/3shares_ror5_dec_O2/CW308_STM32F4_10000000.png)
 
 
 ## 2 rotated shares with device specific fixes
@@ -183,14 +189,13 @@ during bit interleaving or in non-linear functions). Similar fixes might exist
 for other devices.
 
 - Encryption (12/6 PA/PB rounds) of `protected_bi32_armv6` on STM32F405 using
-  2 rotated shares, device specific fixes, external bit interleaving
-  (can be computed offline, does not depend on key) and ~4.2M traces:  
-  ![~4.2M](ttest/protected_bi32_armv6/2shares_ror5_enc_mov0_extbi/CW308_STM32F405_4194368.png)
+  2 rotated shares, device specific fixes, optimization `-Os` and 10M traces:  
+  ![10M](ttest/protected_bi32_armv6/2shares_ror5_enc_mov0/CW308_STM32F4_pico_10000000.png)
 
 - Decryption (2 PA/PB rounds) of `protected_bi32_armv6` on STM32F415 using
-  2 rotated shares with device specific fixes and 4M and 5M traces:  
-  ![4M](ttest/protected_bi32_armv6/2shares_ror5_dec_mov0/CW308_STM32F415_4000000.png)  
-  ![5M](ttest/protected_bi32_armv6/2shares_ror5_dec_mov0/CW308_STM32F415_5000000.png)
+  2 rotated shares with device specific fixes, optimization `-Os` and 5M and 6M traces:  
+  ![5M](ttest/protected_bi32_armv6/2shares_ror5_dec_mov0/CW308_STM32F4_5000000.png)  
+  ![6M](ttest/protected_bi32_armv6/2shares_ror5_dec_mov0/CW308_STM32F4_6000000.png)
 
 
 ## 2 rotated shares without device specific fixes
@@ -199,12 +204,12 @@ Without device specific fixes, peaks in the t-test are shown after a low number
 of traces (<10k). In the following we show such example graphs.
 
 - Decryption (2 PA/PB rounds) of `protected_bi32_armv6` on STM32F415 using
-  2 rotated shares, without device specific fixes and 100k traces:  
-  ![100k](ttest/protected_bi32_armv6/2shares_ror5_dec/CW308_STM32F415_100000.png)
+  2 rotated shares, without device specific fixes, optimization `-Os` and 100k traces:  
+  ![100k](ttest/protected_bi32_armv6/2shares_ror5_dec/CW308_STM32F4_100000.png)
 
 - Decryption (2 PA/PB rounds) of `protected_bi32_armv6` on STM32F303 using
-  2 rotated shares, without device specific fixes and 10k traces:  
-  ![100k](ttest/protected_bi32_armv6/2shares_ror5_dec/CW308_STM32F303_10000.png)
+  2 rotated shares, without device specific fixes, optimization `-Os` and 10k traces:  
+  ![100k](ttest/protected_bi32_armv6/2shares_ror5_dec/CW308_STM32F3_10000.png)
 
 
 # Authors
