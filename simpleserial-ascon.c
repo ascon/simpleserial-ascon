@@ -27,21 +27,42 @@
 
 // ascon dependencies
 #include "api.h"
-#include "config.h"
 #include "crypto_aead.h"
-#include "crypto_aead_shared.h"
 
 #ifndef SS_SHARED
-#define SS_SHARED 1
+#define SS_SHARED 0
 #endif
 
-#ifndef DATA_LEN
-#define DATA_LEN 190  // up to 190 for SS_VER_1_1
+#if SS_SHARED
+
+#include "crypto_aead_shared.h"
+
+// number of masked 32-bit structs (with 64-bit padding)
+#define LENGTH(len) ((((len) + 7) / 8) * 2)
+
+mask_m_uint32_t* m = NULL;
+mask_c_uint32_t* c = NULL;
+mask_ad_uint32_t* a = NULL;
+mask_npub_uint32_t* n = NULL;
+mask_key_uint32_t* k = NULL;
+
+#else
+
+// number of bytes
+#define LENGTH(len) (len)
+
+unsigned char* m = NULL;
+unsigned char* c = NULL;
+unsigned char* a = NULL;
+unsigned char* n = NULL;
+unsigned char* k = NULL;
+
 #endif
 
-#ifndef RESP_LEN
-#define RESP_LEN 96
-#endif
+unsigned long long mlen = 0;
+unsigned long long clen = 0;
+unsigned long long alen = 0;
+unsigned long long len = 0;
 
 #define M 0x01            // data contains m
 #define C 0x02            // data contains c
@@ -52,24 +73,13 @@
 #define RUN_DEC 0x40      // run dec after data transfer
 #define OMIT_RESULT 0x80  // omit sending result after en/decryption
 
-#if SS_SHARED
-mask_m_uint32_t* m = NULL;
-mask_c_uint32_t* c = NULL;
-mask_ad_uint32_t* a = NULL;
-mask_npub_uint32_t* n = NULL;
-mask_key_uint32_t* k = NULL;
-#else
-unsigned char* m = NULL;
-unsigned char* c = NULL;
-unsigned char* a = NULL;
-unsigned char* n = NULL;
-unsigned char* k = NULL;
+#ifndef DATA_LEN
+#define DATA_LEN 190  // up to 190 for SS_VER_1_1
 #endif
 
-unsigned long long mlen = 0;
-unsigned long long clen = 0;
-unsigned long long alen = 0;
-unsigned long long len = 0;
+#ifndef RESP_LEN
+#define RESP_LEN 96
+#endif
 
 uint8_t data_out[RESP_LEN] = {0};
 
@@ -86,7 +96,7 @@ uint8_t ascon(uint8_t* data, uint8_t dlen) {
   if (flags & M) {
     mlen = *data;
     data += 1;
-    len = SS_SHARED ? NUM_WORDS(mlen) * sizeof(*m) : mlen;
+    len = LENGTH(mlen) * sizeof(*m);
     if (m) free(m);
     m = malloc(len);
     memcpy(m, data, len);
@@ -96,7 +106,7 @@ uint8_t ascon(uint8_t* data, uint8_t dlen) {
   if (flags & C) {
     clen = *data;
     data += 1;
-    len = SS_SHARED ? NUM_WORDS(clen) * sizeof(*m) : clen;
+    len = LENGTH(clen) * sizeof(*c);
     if (c) free(c);
     c = malloc(len);
     memcpy(c, data, len);
@@ -106,7 +116,7 @@ uint8_t ascon(uint8_t* data, uint8_t dlen) {
   if (flags & A) {
     alen = *data;
     data += 1;
-    len = SS_SHARED ? NUM_WORDS(alen) * sizeof(*m) : alen;
+    len = LENGTH(alen) * sizeof(*a);
     if (a) free(a);
     a = malloc(len);
     memcpy(a, data, len);
@@ -115,7 +125,7 @@ uint8_t ascon(uint8_t* data, uint8_t dlen) {
 
   if (flags & N) {
     int nlen = CRYPTO_NPUBBYTES;
-    len = SS_SHARED ? NUM_WORDS(nlen) * sizeof(*m) : nlen;
+    len = LENGTH(nlen) * sizeof(*n);
     if (n) free(n);
     n = malloc(len);
     memcpy(n, data, len);
@@ -124,7 +134,7 @@ uint8_t ascon(uint8_t* data, uint8_t dlen) {
 
   if (flags & K) {
     int klen = CRYPTO_KEYBYTES;
-    len = SS_SHARED ? NUM_WORDS(klen) * sizeof(*m) : klen;
+    len = LENGTH(klen) * sizeof(*k);
     if (k) free(k);
     k = malloc(len);
     memcpy(k, data, len);
@@ -133,7 +143,7 @@ uint8_t ascon(uint8_t* data, uint8_t dlen) {
 
   if (flags & RUN_ENC) {
     clen = mlen + CRYPTO_ABYTES;
-    len = SS_SHARED ? NUM_WORDS(clen) * sizeof(*m) : clen;
+    len = LENGTH(clen) * sizeof(*c);
     if (c) free(c);
     c = malloc(len);
 
@@ -153,7 +163,7 @@ uint8_t ascon(uint8_t* data, uint8_t dlen) {
   if (flags & RUN_DEC) {
     int result;
     mlen = clen - CRYPTO_ABYTES;
-    len = SS_SHARED ? NUM_WORDS(mlen) * sizeof(*m) : mlen;
+    len = LENGTH(mlen) * sizeof(*m);
     if (m) free(m);
     m = malloc(len);
 
