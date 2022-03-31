@@ -19,7 +19,6 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
-#include <time.h>
 
 // cw dependencies
 #include "hal.h"
@@ -198,7 +197,6 @@ int main(void) {
   init_uart();
   trigger_setup();
   simpleserial_init();
-  srand(time(0));
 
 #if SS_VER == SS_VER_2_1 || SS_VER == SS_VER_2_0
   simpleserial_addcmd('a', DATA_LEN, ascon);
