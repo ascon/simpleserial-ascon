@@ -162,7 +162,7 @@ uint8_t ascon(uint8_t* data, uint8_t dlen) {
   if (flags & RUN_DEC) {
     int result;
     mlen = clen - CRYPTO_ABYTES;
-    len = LENGTH(mlen) * sizeof(*m);
+    len = LENGTH(clen) * sizeof(*m);
     if (m) free(m);
     m = malloc(len);
 
