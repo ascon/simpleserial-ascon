@@ -147,13 +147,13 @@ uint8_t ascon(uint8_t* data, uint8_t dlen) {
     if (c) free(c);
     c = malloc(len);
 
-#if SS_SHARED
     trigger_high();
+#if SS_SHARED
     crypto_aead_encrypt_shared(c, &clen, m, mlen, a, alen, n, k);
-    trigger_low();
 #else
     crypto_aead_encrypt(c, &clen, m, mlen, a, alen, NULL, n, k);
 #endif
+    trigger_low();
 
     len = (len < RESP_LEN) ? len : RESP_LEN;
     memcpy(data_out, c, len);
@@ -167,13 +167,13 @@ uint8_t ascon(uint8_t* data, uint8_t dlen) {
     if (m) free(m);
     m = malloc(len);
 
-#if SS_SHARED
     trigger_high();
+#if SS_SHARED
     result = crypto_aead_decrypt_shared(m, &mlen, c, clen, a, alen, n, k);
-    trigger_low();
 #else
     result = crypto_aead_decrypt(m, &mlen, NULL, c, clen, a, alen, n, k);
 #endif
+    trigger_low();
 
     data_out[0] = result;
     len = (len < RESP_LEN - 1) ? len : RESP_LEN - 1;
