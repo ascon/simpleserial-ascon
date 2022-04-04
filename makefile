@@ -37,6 +37,7 @@ TARGET = simpleserial-ascon
 SRC += ${TARGET}.c
 SRC += randombytes.c
 SRC+=$(wildcard $(CRYPTO_PATH)/*.c)
+ASRC+=$(wildcard $(CRYPTO_PATH)/*.S)
 EXTRAINCDIRS += $(CRYPTO_PATH)
 
 # -----------------------------------------------------------------------------
