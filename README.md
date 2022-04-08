@@ -4,17 +4,19 @@ This repository contains high-level masked (shared) [Ascon](https://ascon.iaik.t
 software implementations, mostly written in C. These implementations can be used
 as a starting point to generate device specific C/ASM implementations.
 
-Masked C implementations requires a minimum amount of ASM instructions.
+The masked C implementations require a minimum amount of ASM instructions.
 Otherwise, the compiler may heavily optimize the code and even combine
 shares. Obviously, the output generated is very sensitive to compiler and
 environment changes and any generated output needs to be security evaluated.
+All implementations have been compiled with `-Os`, the ChipWhisperer default.
 
 A preliminary evaluation of these implementations has been performed on some
 [ChipWhisperer](https://www.newae.com/chipwhisperer) devices. The results can
 be reproduced by performing the following steps:
 
-- Make sure this repository is checked out in the `hardware/victims/firmware` folder of your chipwhisperer installation.
-- Make sure the `jupyter/ascon_sca.ipynb` script is located in the `jupyter` folder of your chipwhisperer installation.
+- Install and/or checkout version v5.5.2 of (https://github.com/newaetech/chipwhisperer)
+- Make sure `simpleserial-ascon` is checked out in the `hardware/victims/firmware` folder of the chipwhisperer installation.
+- Make sure the `jupyter/ascon_sca.ipynb` script is located in the `jupyter` folder of the chipwhisperer installation.
 - Run the shared simpleserial interface jupyter script `jupyter/ascon_sca.ipynb`.
 
 The masked software interface follows the
@@ -26,9 +28,9 @@ The number of shares are defined by the parameters `NUM_SHARES_KEY`,
 `NUM_SHARES_NPUB`, `NUM_SHARES_AD`, `NUM_SHARES_M` and `NUM_SHARES_C` in the
 `api.h` file.
 
-Additionally, most masked Ascon implementations assume that the shares are
-(32/64-bit) rotated against each other using the parameter `ASCON_ROR_SHARES`
-defined in the `api.h` file. The Ascon specific masking and rotation functions are
+Additionally, the masked Ascon implementations assume that the shares are
+rotated against each other using the parameter `ASCON_ROR_SHARES` defined in
+the `api.h` file. The Ascon specific masking and rotation functions are
 defined in the Python functions `generate_shares` and `combine_shares` as well
 as in the C functions `generate_shares_encrypt`, `generate_shares_decrypt`,
 `combine_shares_encrypt` and `combine_shares_decrypt`.
@@ -95,7 +97,7 @@ each 64-bit share `i` by `2*x*i mod 32` bits at the interface level.
   * Measurement: CW501 differential probe
   * Sampling rate: 1GS
 
-The experimental setup and evalutions for STM32F303 and STM32F415 are
+The experimental setup and evaluations for STM32F303 and STM32F415 are
 given in the jupyter scripts in this repository.
 
 
@@ -118,11 +120,13 @@ given in the jupyter scripts in this repository.
     `crypto_aead_decrypt_shared`
 
 - Time required to collect data for a given attack/leakage assessment:
-  * 30 iterations/second using a target baud rate of 230400
-  * 8 iterations/second using a target baud rate of 38400
+  * 45 iterations/second using `SS_VER_2_1` and the ChipWhisperer `develop` branch
+  * 30 iterations/second using `SS_VER_1_1`, a target baud rate of 230400 and ChipWhisperer `v5.5.2`
+  * 8 iterations/second using `SS_VER_1_1`, a target baud rate of 38400 and ChipWhisperer `v5.5.2`
 
 - Total time of the attack/assessment:
-  * About 9 hours per 1 million traces
+  * About 6 hours per 1 million traces with `SS_VER_2_1`
+  * About 9 hours per 1 million traces with `SS_VER_1_1`
 
 - Total size of all traces: not stored
 
